@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Geo-Lead Distribution System - Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+      <div class="flex items-center space-x-3">
+        <img src="https://storage.googleapis.com/a1aa/image/ff08d224-3e84-430f-64ff-26e52ede5831.jpg" alt="Geo-Lead Distribution System logo, stylized letters GL in blue and white" class="h-10 w-10 rounded" width="40" height="40"/>
+        <h1 class="text-xl font-semibold text-gray-900">Geo-Lead Distribution</h1>
+      </div>
+      <nav class="hidden md:flex space-x-6 text-gray-700 font-medium">
+        <a href="#dashboard" class="hover:text-blue-600 transition">Dashboard</a>
+        <a href="#customers" class="hover:text-blue-600 transition">Customers</a>
+        <a href="#subscriptions" class="hover:text-blue-600 transition">Subscriptions</a>
+        <a href="#leads" class="hover:text-blue-600 transition">Leads</a>
+        <a href="#distributions" class="hover:text-blue-600 transition">Distributions</a>
+        <a href="#settings" class="hover:text-blue-600 transition">Settings</a>
+      </nav>
+      <button id="mobile-menu-button" aria-label="Open menu" class="md:hidden text-gray-700 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <i class="fas fa-bars fa-lg"></i>
+      </button>
+    </div>
+    <nav id="mobile-menu" aria-label="Mobile menu" class="md:hidden bg-white border-t border-gray-200 hidden">
+      <a href="#dashboard" class="block px-4 py-3 text-gray-700 hover:bg-gray-100">Dashboard</a>
+      <a href="#customers" class="block px-4 py-3 text-gray-700 hover:bg-gray-100">Customers</a>
+      <a href="#subscriptions" class="block px-4 py-3 text-gray-700 hover:bg-gray-100">Subscriptions</a>
+      <a href="#leads" class="block px-4 py-3 text-gray-700 hover:bg-gray-100">Leads</a>
+      <a href="#distributions" class="block px-4 py-3 text-gray-700 hover:bg-gray-100">Distributions</a>
+      <a href="#settings" class="block px-4 py-3 text-gray-700 hover:bg-gray-100">Settings</a>
+    </nav>
+  </header>
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="mb-10">
+      <h2 class="text-2xl font-semibold text-gray-900 mb-6">Dashboard Overview</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white rounded-lg shadow p-5 flex items-center space-x-4">
+          <div class="p-3 bg-blue-100 text-blue-600 rounded-full">
+            <i class="fas fa-users fa-2x"></i>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-500">Total Customers</p>
+            <p class="text-xl font-semibold text-gray-900">1,245</p>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-5 flex items-center space-x-4">
+          <div class="p-3 bg-green-100 text-green-600 rounded-full">
+            <i class="fas fa-file-pdf fa-2x"></i>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-500">Leads Processed</p>
+            <p class="text-xl font-semibold text-gray-900">3,872</p>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-5 flex items-center space-x-4">
+          <div class="p-3 bg-yellow-100 text-yellow-600 rounded-full">
+            <i class="fas fa-credit-card fa-2x"></i>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-500">Active Subscriptions</p>
+            <p class="text-xl font-semibold text-gray-900">1,030</p>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-5 flex items-center space-x-4">
+          <div class="p-3 bg-red-100 text-red-600 rounded-full">
+            <i class="fas fa-envelope fa-2x"></i>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-500">Emails Sent Today</p>
+            <p class="text-xl font-semibold text-gray-900">2,145</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Customers Section -->
+    <section id="customers" class="mb-10">
+      <h2 class="text-2xl font-semibold text-gray-900 mb-6">Customers</h2>
+      <div class="overflow-x-auto bg-white rounded-lg shadow">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stripe Customer ID</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Payment</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Anna Müller</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">anna.mueller@example.com</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">cus_J1a2b3c4d5e6f7</td>
+              <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">paid</span></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-06-10</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-11-15</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Maximilian Schmidt</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">max.schmidt@example.com</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">cus_J7g8h9i0j1k2l3</td>
+              <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">unpaid</span></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-05-01</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-12-01</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Sophie Becker</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">sophie.becker@example.com</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">cus_J4m5n6o7p8q9r0</td>
+              <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">paid</span></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-06-12</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-20</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Lukas Fischer</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">lukas.fischer@example.com</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">cus_J9s8t7u6v5w4x3</td>
+              <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">pending</span></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-06-01</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-09-30</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Maria Wagner</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">maria.wagner@example.com</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">cus_J2z3y4x5w6v7u8</td>
+              <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">paid</span></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-06-11</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-11-05</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <!-- Subscriptions Section -->
+    <section id="subscriptions" class="mb-10">
+      <h2 class="text-2xl font-semibold text-gray-900 mb-6">Subscriptions</h2>
+      <div class="overflow-x-auto bg-white rounded-lg shadow">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PLZ (Postal Code)</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Start Date</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">End Date</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Anna Müller</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10115</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-11-15</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+              <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">active</span></td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Maximilian Schmidt</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10115</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-12-01</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+              <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">inactive</span></td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Sophie Becker</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">80331</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-20</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+              <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">active</span></td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Lukas Fischer</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">50667</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-09-30</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+              <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">pending</span></td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Maria Wagner</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10115</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-11-05</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+              <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">active</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <!-- Leads Section -->
+    <section id="leads" class="mb-10">
+      <h2 class="text-2xl font-semibold text-gray-900 mb-6">Leads</h2>
+      <div class="overflow-x-auto bg-white rounded-lg shadow">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lead ID</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PLZ</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PDF</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dialfire ID</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Processed At</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1001</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10115</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <a href="https://placehold.co/600x800/png?text=Lead+1001+PDF" target="_blank" class="text-blue-600 hover:underline">View PDF</a>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">df_abc123</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-06-12 08:15</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-06-12 09:00</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">processed</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1002</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">80331</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <a href="https://placehold.co/600x800/png?text=Lead+1002+PDF" target="_blank" class="text-blue-600 hover:underline">View PDF</a>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">df_def456</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-06-12 10:30</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">pending</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1003</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">50667</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <a href="https://placehold.co/600x800/png?text=Lead+1003+PDF" target="_blank" class="text-blue-600 hover:underline">View PDF</a>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">df_ghi789</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-06-11 14:45</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-06-11 15:30</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">processed</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1004</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10115</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <a href="https://placehold.co/600x800/png?text=Lead+1004+PDF" target="_blank" class="text-blue-600 hover:underline">View PDF</a>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">df_jkl012</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-06-10 09:00</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">pending</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1005</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">80331</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <a href="https://placehold.co/600x800/png?text=Lead+1005+PDF" target="_blank" class="text-blue-600 hover:underline">View PDF</a>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">df_mno345</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-06-09 16:20</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-06-09 17:00</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">processed</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <!-- Lead Distributions Section -->
+    <section id="distributions" class="mb-10">
+      <h2 class="text-2xl font-semibold text-gray-900 mb-6">Lead Distributions</h2>
+      <div class="overflow-x-auto bg-white rounded-lg shadow">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Distribution ID</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lead ID</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Scheduled For</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sent At</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">5001</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1001</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Anna Müller</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-06-12 09:00</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-06-12 09:05</td>
+              <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">sent</span></td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">5002</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1002</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Sophie Becker</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-06-12 13:30</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+              <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">pending</span></td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">5003</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1003</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Lukas Fischer</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-06-11 15:30</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-06-11 15:45</td>
+              <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">sent</span></td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">5004</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1004</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Maximilian Schmidt</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-06-10 12:00</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+              <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">pending</span></td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">5005</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1005</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Maria Wagner</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-06-09 17:00</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-06-09 17:10</td>
+              <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">sent</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <!-- Settings Section -->
+    <section id="settings" class="mb-10">
+      <h2 class="text-2xl font-semibold text-gray-900 mb-6">Settings</h2>
+      <div class="bg-white rounded-lg shadow p-6 max-w-3xl">
+        <form class="space-y-6">
+          <div>
+            <label for="apiKey" class="block text-sm font-medium text-gray-700">API Key</label>
+            <input type="text" name="apiKey" id="apiKey" placeholder="Enter your API key" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"/>
+          </div>
+          <div>
+            <label for="stripeSecret" class="block text-sm font-medium text-gray-700">Stripe Secret Key</label>
+            <input type="password" name="stripeSecret" id="stripeSecret" placeholder="Enter Stripe secret key" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"/>
+          </div>
+          <div>
+            <label for="dialfireToken" class="block text-sm font-medium text-gray-700">Dialfire API Token</label>
+            <input type="text" name="dialfireToken" id="dialfireToken" placeholder="Enter Dialfire API token" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"/>
+          </div>
+          <div>
+            <label for="emailService" class="block text-sm font-medium text-gray-700">Email Service</label>
+            <select name="emailService" id="emailService" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+              <option>SendGrid</option>
+              <option>NodeMailer</option>
+            </select>
+          </div>
+          <div class="flex justify-end">
+            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Save Settings</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+  <footer class="bg-white border-t border-gray-200 py-4 text-center text-gray-500 text-sm">
+    © 2024 Geo-Lead Distribution System. All rights reserved.
+  </footer>
+  <script>
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+  </script>
+</body>
+</html>
