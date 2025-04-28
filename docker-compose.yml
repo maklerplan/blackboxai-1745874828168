@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password123
+    command: mongod --bind_ip_all
+    network_mode: host
+
+  backend:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_CONNECTION_STRING=mongodb://admin:password123@localhost:27017/leadmanagement?authSource=admin
+      - JWT_SECRET=your_jwt_secret_here
+      - PORT=3000
+      - OPENAI_API_KEY=your_openai_api_key
+      - WHATSAPP_API_KEY=your_whatsapp_api_key
+      - WHATSAPP_API_URL=https://graph.facebook.com/v17.0
+      - WHATSAPP_PHONE_NUMBER_ID=your_phone_number_id
+      - SIP_SERVER=your_sip_server
+      - SIP_USERNAME=your_sip_username
+      - SIP_PASSWORD=your_sip_password
+      - SIP_REALM=your_sip_realm
+      - SIP_WS_SERVERS=wss://your_sip_ws_server
+    network_mode: host
+    depends_on:
+      - mongodb
+
+volumes:
+  mongodb_data:
