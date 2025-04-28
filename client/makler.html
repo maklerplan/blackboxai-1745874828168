@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Makler Management - Geo-Lead Distribution System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <header class="bg-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+      <div class="flex items-center">
+        <a href="index.html" class="text-xl font-semibold text-gray-900">Geo-Lead Distribution</a>
+      </div>
+      <nav class="hidden md:flex space-x-4">
+        <a href="index.html" class="text-gray-700 hover:text-blue-600">Dashboard</a>
+        <a href="makler.html" class="text-blue-600 font-medium">Makler Management</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="md:flex md:items-center md:justify-between mb-6">
+      <h2 class="text-2xl font-bold text-gray-900">Makler Management</h2>
+      <button id="newMaklerBtn" class="mt-4 md:mt-0 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+        <i class="fas fa-plus mr-2"></i>
+        Neuen Makler anlegen
+      </button>
+    </div>
+
+    <!-- Makler Form Modal -->
+    <div id="maklerModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 hidden">
+      <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900" id="modalTitle">Neuen Makler anlegen</h3>
+          </div>
+          <form id="maklerForm" class="px-6 py-4 space-y-4">
+            <input type="hidden" id="maklerId">
+            <div>
+              <label for="fullName" class="block text-sm font-medium text-gray-700">Name</label>
+              <input type="text" id="fullName" name="fullName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+            </div>
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+              <input type="email" id="email" name="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+            </div>
+            <div>
+              <label for="phone" class="block text-sm font-medium text-gray-700">Telefon</label>
+              <input type="tel" id="phone" name="phone" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+            </div>
+            <div>
+              <label for="plz" class="block text-sm font-medium text-gray-700">PLZ (Komma-getrennt)</label>
+              <input type="text" id="plz" name="plz" placeholder="z.B. 10115, 10117, 10119" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Firma Details</label>
+              <div class="mt-1 space-y-2">
+                <input type="text" id="firma" name="firma" placeholder="Firmenname" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                <input type="text" id="steuernummer" name="steuernummer" placeholder="Steuernummer" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+              </div>
+            </div>
+            <div>
+              <label for="subscriptionStatus" class="block text-sm font-medium text-gray-700">Subscription Status</label>
+              <select id="subscriptionStatus" name="subscriptionStatus" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                <option value="trial">Trial</option>
+                <option value="active">Active</option>
+                <option value="expired">Expired</option>
+                <option value="pending_payment">Pending Payment</option>
+              </select>
+            </div>
+            <div class="flex items-center">
+              <input type="checkbox" id="testAbo" name="testAbo" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+              <label for="testAbo" class="ml-2 block text-sm text-gray-900">Test-Abo aktivieren</label>
+            </div>
+            <div class="mt-5 flex justify-end space-x-3">
+              <button type="button" id="cancelBtn" class="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                Abbrechen
+              </button>
+              <button type="submit" class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                Speichern
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Makler List -->
+    <div class="bg-white shadow overflow-hidden sm:rounded-md">
+      <ul id="maklerList" class="divide-y divide-gray-200">
+        <!-- Makler items will be inserted here -->
+      </ul>
+    </div>
+  </main>
+
+  <script>
+    // DOM Elements
+    const modal = document.getElementById('maklerModal');
+    const form = document.getElementById('maklerForm');
+    const newMaklerBtn = document.getElementById('newMaklerBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const maklerList = document.getElementById('maklerList');
+    const modalTitle = document.getElementById('modalTitle');
+
+    // Event Listeners
+    newMaklerBtn.addEventListener('click', () => {
+      modalTitle.textContent = 'Neuen Makler anlegen';
+      form.reset();
+      document.getElementById('maklerId').value = '';
+      modal.classList.remove('hidden');
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      modal.classList.add('hidden');
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = {
+        fullName: document.getElementById('fullName').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        allowedPlz: document.getElementById('plz').value.split(',').map(p => p.trim()),
+        companyData: {
+          firma: document.getElementById('firma').value,
+          steuernummer: document.getElementById('steuernummer').value
+        },
+        subscriptionStatus: document.getElementById('subscriptionStatus').value,
+        testAbo: document.getElementById('testAbo').checked
+      };
+
+      const maklerId = document.getElementById('maklerId').value;
+      const method = maklerId ? 'PUT' : 'POST';
+      const url = maklerId ? `/api/makler/${maklerId}` : '/api/makler';
+
+      try {
+        const response = await fetch(url, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) throw new Error('Failed to save Makler');
+
+        modal.classList.add('hidden');
+        loadMaklerList();
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Fehler beim Speichern des Maklers');
+      }
+    });
+
+    // Load Makler List
+    async function loadMaklerList() {
+      try {
+        const response = await fetch('/api/makler', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        const maklers = await response.json();
+        
+        maklerList.innerHTML = maklers.map(makler => `
+          <li class="px-6 py-4 flex items-center justify-between hover:bg-gray-50">
+            <div>
+              <h3 class="text-sm font-medium text-gray-900">${makler.fullName}</h3>
+              <p class="text-sm text-gray-500">${makler.email}</p>
+              <p class="text-sm text-gray-500">PLZ: ${makler.allowedPlz.join(', ')}</p>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                makler.subscriptionStatus === 'active' ? 'bg-green-100 text-green-800' :
+                makler.subscriptionStatus === 'trial' ? 'bg-blue-100 text-blue-800' :
+                makler.subscriptionStatus === 'expired' ? 'bg-red-100 text-red-800' :
+                'bg-yellow-100 text-yellow-800'
+              }">
+                ${makler.subscriptionStatus}
+              </span>
+            </div>
+            <div class="flex space-x-3">
+              <button onclick="editMakler('${makler._id}')" class="text-blue-600 hover:text-blue-900">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button onclick="deleteMakler('${makler._id}')" class="text-red-600 hover:text-red-900">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </li>
+        `).join('');
+      } catch (error) {
+        console.error('Error:', error);
+        maklerList.innerHTML = '<li class="px-6 py-4 text-red-600">Fehler beim Laden der Makler</li>';
+      }
+    }
+
+    // Edit Makler
+    async function editMakler(id) {
+      try {
+        const response = await fetch(`/api/makler/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        const makler = await response.json();
+
+        document.getElementById('maklerId').value = makler._id;
+        document.getElementById('fullName').value = makler.fullName;
+        document.getElementById('email').value = makler.email;
+        document.getElementById('phone').value = makler.phone || '';
+        document.getElementById('plz').value = makler.allowedPlz.join(', ');
+        document.getElementById('firma').value = makler.companyData?.firma || '';
+        document.getElementById('steuernummer').value = makler.companyData?.steuernummer || '';
+        document.getElementById('subscriptionStatus').value = makler.subscriptionStatus;
+        document.getElementById('testAbo').checked = makler.testAbo;
+
+        modalTitle.textContent = 'Makler bearbeiten';
+        modal.classList.remove('hidden');
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Fehler beim Laden des Maklers');
+      }
+    }
+
+    // Delete Makler
+    async function deleteMakler(id) {
+      if (!confirm('Möchten Sie diesen Makler wirklich löschen?')) return;
+
+      try {
+        const response = await fetch(`/api/makler/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+
+        if (!response.ok) throw new Error('Failed to delete Makler');
+        loadMaklerList();
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Fehler beim Löschen des Maklers');
+      }
+    }
+
+    // Initial load
+    loadMaklerList();
+  </script>
+</body>
+</html>
