@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Softphone - Geo-Lead Distribution System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jssip/3.10.0/jssip.min.js"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .dialer-button {
+      transition: all 0.2s;
+    }
+    .dialer-button:active {
+      transform: scale(0.95);
+    }
+    .call-active {
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { background-color: rgba(52, 211, 153, 0.5); }
+      50% { background-color: rgba(52, 211, 153, 0.8); }
+      100% { background-color: rgba(52, 211, 153, 0.5); }
+    }
+  </style>
+</head>
+<body class="bg-gray-900 min-h-screen flex flex-col text-white">
+  <header class="bg-gray-800 shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+      <div class="flex items-center space-x-3">
+        <a href="index.html" class="text-xl font-semibold text-white">Geo-Lead Distribution</a>
+      </div>
+      <nav class="hidden md:flex space-x-6 text-gray-300 font-medium">
+        <a href="index.html" class="hover:text-green-400 transition">Dashboard</a>
+        <a href="makler.html" class="hover:text-green-400 transition">Makler</a>
+        <a href="notes.html" class="hover:text-green-400 transition">Notes</a>
+        <a href="whatsapp.html" class="hover:text-green-400 transition">WhatsApp</a>
+        <a href="softphone.html" class="text-green-400 transition">Softphone</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="md:flex md:space-x-6">
+      <!-- Softphone Interface -->
+      <div class="md:w-1/2 mb-6 md:mb-0">
+        <div class="bg-gray-800 rounded-lg shadow-lg p-6">
+          <div class="mb-6">
+            <input type="tel" id="phoneNumber" class="w-full bg-gray-700 text-2xl text-center py-4 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none" placeholder="+49...">
+          </div>
+
+          <!-- Dialer Pad -->
+          <div class="grid grid-cols-3 gap-4 mb-6">
+            <button class="dialer-button bg-gray-700 hover:bg-gray-600 text-2xl font-semibold h-16 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" onclick="dialPad('1')">1</button>
+            <button class="dialer-button bg-gray-700 hover:bg-gray-600 text-2xl font-semibold h-16 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" onclick="dialPad('2')">2</button>
+            <button class="dialer-button bg-gray-700 hover:bg-gray-600 text-2xl font-semibold h-16 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" onclick="dialPad('3')">3</button>
+            <button class="dialer-button bg-gray-700 hover:bg-gray-600 text-2xl font-semibold h-16 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" onclick="dialPad('4')">4</button>
+            <button class="dialer-button bg-gray-700 hover:bg-gray-600 text-2xl font-semibold h-16 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" onclick="dialPad('5')">5</button>
+            <button class="dialer-button bg-gray-700 hover:bg-gray-600 text-2xl font-semibold h-16 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" onclick="dialPad('6')">6</button>
+            <button class="dialer-button bg-gray-700 hover:bg-gray-600 text-2xl font-semibold h-16 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" onclick="dialPad('7')">7</button>
+            <button class="dialer-button bg-gray-700 hover:bg-gray-600 text-2xl font-semibold h-16 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" onclick="dialPad('8')">8</button>
+            <button class="dialer-button bg-gray-700 hover:bg-gray-600 text-2xl font-semibold h-16 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" onclick="dialPad('9')">9</button>
+            <button class="dialer-button bg-gray-700 hover:bg-gray-600 text-2xl font-semibold h-16 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" onclick="dialPad('*')">*</button>
+            <button class="dialer-button bg-gray-700 hover:bg-gray-600 text-2xl font-semibold h-16 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" onclick="dialPad('0')">0</button>
+            <button class="dialer-button bg-gray-700 hover:bg-gray-600 text-2xl font-semibold h-16 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" onclick="dialPad('#')">#</button>
+          </div>
+
+          <!-- Call Controls -->
+          <div class="grid grid-cols-3 gap-4">
+            <button id="callButton" onclick="handleCall()" class="bg-green-500 hover:bg-green-600 text-white text-xl font-semibold py-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+              <i class="fas fa-phone"></i>
+            </button>
+            <button onclick="handleMute()" class="bg-gray-700 hover:bg-gray-600 text-xl font-semibold py-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+              <i class="fas fa-microphone"></i>
+            </button>
+            <button onclick="handleHangup()" class="bg-red-500 hover:bg-red-600 text-white text-xl font-semibold py-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+              <i class="fas fa-phone-slash"></i>
+            </button>
+          </div>
+
+          <!-- Call Status -->
+          <div id="callStatus" class="mt-4 text-center text-gray-400">
+            Ready
+          </div>
+        </div>
+      </div>
+
+      <!-- Call History -->
+      <div class="md:w-1/2">
+        <div class="bg-gray-800 rounded-lg shadow-lg">
+          <div class="px-6 py-4 border-b border-gray-700">
+            <h2 class="text-lg font-semibold text-white">Call History</h2>
+          </div>
+          <div class="divide-y divide-gray-700" id="callHistory">
+            <!-- Call history will be dynamically inserted here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let ua;
+    let session;
+    let isMuted = false;
+
+    // Initialize JsSIP
+    async function initializeSIP() {
+      try {
+        const response = await fetch('/api/sip/config');
+        const config = await response.json();
+
+        const socket = new JsSIP.WebSocketInterface(config.wsServers);
+        const configuration = {
+          sockets: [socket],
+          uri: config.uri,
+          password: config.password,
+          register: true
+        };
+
+        ua = new JsSIP.UA(configuration);
+
+        ua.on('registered', () => {
+          updateStatus('Registered');
+        });
+
+        ua.on('unregistered', () => {
+          updateStatus('Unregistered');
+        });
+
+        ua.on('registrationFailed', (e) => {
+          updateStatus('Registration failed');
+        });
+
+        ua.start();
+      } catch (error) {
+        console.error('Error initializing SIP:', error);
+        updateStatus('Failed to initialize');
+      }
+    }
+
+    // Dialer pad function
+    function dialPad(digit) {
+      const phoneNumber = document.getElementById('phoneNumber');
+      phoneNumber.value += digit;
+    }
+
+    // Handle call button
+    function handleCall() {
+      const phoneNumber = document.getElementById('phoneNumber').value;
+      if (!phoneNumber) return;
+
+      if (!session) {
+        // Start call
+        const options = {
+          mediaConstraints: { audio: true, video: false }
+        };
+
+        session = ua.call(phoneNumber, options);
+        setupCallEventHandlers();
+        updateStatus('Calling...');
+        document.getElementById('callButton').classList.add('call-active');
+      } else {
+        // Answer incoming call
+        session.answer({
+          mediaConstraints: { audio: true, video: false }
+        });
+        updateStatus('Call in progress');
+      }
+    }
+
+    // Handle hangup button
+    function handleHangup() {
+      if (session) {
+        session.terminate();
+        session = null;
+        document.getElementById('callButton').classList.remove('call-active');
+        updateStatus('Call ended');
+        logCall('outbound', document.getElementById('phoneNumber').value, 'ended');
+      }
+    }
+
+    // Handle mute button
+    function handleMute() {
+      if (session) {
+        if (isMuted) {
+          session.unmute();
+          isMuted = false;
+        } else {
+          session.mute();
+          isMuted = true;
+        }
+      }
+    }
+
+    // Setup call event handlers
+    function setupCallEventHandlers() {
+      session.on('accepted', () => {
+        updateStatus('Call in progress');
+      });
+
+      session.on('ended', () => {
+        session = null;
+        document.getElementById('callButton').classList.remove('call-active');
+        updateStatus('Call ended');
+      });
+
+      session.on('failed', () => {
+        session = null;
+        document.getElementById('callButton').classList.remove('call-active');
+        updateStatus('Call failed');
+      });
+    }
+
+    // Update status display
+    function updateStatus(status) {
+      document.getElementById('callStatus').textContent = status;
+    }
+
+    // Log call to history
+    async function logCall(direction, number, status) {
+      try {
+        const response = await fetch('/api/calls', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify({
+            direction,
+            number,
+            status
+          })
+        });
+
+        if (!response.ok) throw new Error('Failed to log call');
+        
+        loadCallHistory();
+      } catch (error) {
+        console.error('Error logging call:', error);
+      }
+    }
+
+    // Load call history
+    async function loadCallHistory() {
+      try {
+        const response = await fetch('/api/calls', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch call history');
+        
+        const calls = await response.json();
+        const historyContainer = document.getElementById('callHistory');
+        
+        historyContainer.innerHTML = calls.map(call => `
+          <div class="p-6 hover:bg-gray-700">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <i class="fas fa-${call.direction === 'inbound' ? 'phone-alt' : 'phone'} ${
+                  call.status === 'completed' ? 'text-green-500' : 
+                  call.status === 'missed' ? 'text-red-500' : 
+                  'text-yellow-500'
+                }"></i>
+                <span class="text-sm text-gray-400">${new Date(call.timestamp).toLocaleString()}</span>
+              </div>
+              <span class="text-sm font-medium text-gray-400">
+                ${call.duration ? `${call.duration}s` : 'N/A'}
+              </span>
+            </div>
+            <p class="mt-2 text-lg">${call.number}</p>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Error loading call history:', error);
+      }
+    }
+
+    // Initialize SIP and load call history when page loads
+    initializeSIP();
+    loadCallHistory();
+  </script>
+</body>
+</html>
