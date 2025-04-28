@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>WhatsApp - Geo-Lead Distribution System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .message-sent {
+      animation: fadeIn 0.3s ease-in;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+      <div class="flex items-center space-x-3">
+        <a href="index.html" class="text-xl font-semibold text-gray-900">Geo-Lead Distribution</a>
+      </div>
+      <nav class="hidden md:flex space-x-6 text-gray-700 font-medium">
+        <a href="index.html" class="hover:text-blue-600 transition">Dashboard</a>
+        <a href="makler.html" class="hover:text-blue-600 transition">Makler</a>
+        <a href="notes.html" class="hover:text-blue-600 transition">Notes</a>
+        <a href="whatsapp.html" class="text-blue-600 transition">WhatsApp</a>
+        <a href="softphone.html" class="hover:text-blue-600 transition">Softphone</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="md:flex md:space-x-6">
+      <!-- Message Sending Section -->
+      <div class="md:w-1/2 mb-6 md:mb-0">
+        <div class="bg-white rounded-lg shadow p-6">
+          <h2 class="text-lg font-semibold mb-4">Send WhatsApp Message</h2>
+          
+          <form id="messageForm" class="space-y-4">
+            <!-- Phone Number Input -->
+            <div>
+              <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+              <div class="mt-1 relative rounded-md shadow-sm">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span class="text-gray-500 sm:text-sm">+</span>
+                </div>
+                <input type="tel" id="phone" name="phone" class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="49123456789">
+              </div>
+            </div>
+
+            <!-- Message Input -->
+            <div>
+              <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+              <div class="mt-1">
+                <textarea id="message" name="message" rows="4" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Enter your message here..."></textarea>
+              </div>
+            </div>
+
+            <!-- File Attachment -->
+            <div>
+              <label for="attachment" class="block text-sm font-medium text-gray-700">Attachment (optional)</label>
+              <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                <div class="space-y-1 text-center">
+                  <i class="fas fa-file-upload text-gray-400 text-3xl mb-2"></i>
+                  <div class="flex text-sm text-gray-600">
+                    <label for="attachment" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                      <span>Upload a file</span>
+                      <input id="attachment" name="attachment" type="file" class="sr-only">
+                    </label>
+                    <p class="pl-1">or drag and drop</p>
+                  </div>
+                  <p class="text-xs text-gray-500">PDF, PNG, JPG up to 10MB</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Send Button -->
+            <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+              <i class="fab fa-whatsapp mr-2"></i>
+              Send Message
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Message History Section -->
+      <div class="md:w-1/2">
+        <div class="bg-white rounded-lg shadow">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold">Message History</h2>
+          </div>
+          <div class="divide-y divide-gray-200" id="messageHistory">
+            <!-- Messages will be dynamically inserted here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Handle form submission
+    document.getElementById('messageForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const phone = document.getElementById('phone').value;
+      const message = document.getElementById('message').value;
+      const attachment = document.getElementById('attachment').files[0];
+
+      try {
+        let formData = new FormData();
+        formData.append('phone', phone);
+        formData.append('message', message);
+        if (attachment) {
+          formData.append('attachment', attachment);
+        }
+
+        const response = await fetch('/api/whatsapp/send', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: formData
+        });
+
+        if (!response.ok) throw new Error('Failed to send message');
+
+        // Clear form
+        document.getElementById('messageForm').reset();
+        
+        // Show success message
+        alert('Message sent successfully!');
+        
+        // Refresh message history
+        loadMessageHistory();
+      } catch (error) {
+        console.error('Error sending message:', error);
+        alert('Failed to send message');
+      }
+    });
+
+    // Load message history
+    async function loadMessageHistory() {
+      try {
+        const response = await fetch('/api/whatsapp/history', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch message history');
+        
+        const messages = await response.json();
+        const historyContainer = document.getElementById('messageHistory');
+        
+        historyContainer.innerHTML = messages.map(msg => `
+          <div class="p-6 hover:bg-gray-50">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <i class="fab fa-whatsapp text-green-500"></i>
+                <span class="text-sm text-gray-500">${new Date(msg.timestamp).toLocaleString()}</span>
+              </div>
+              <span class="text-sm font-medium ${msg.status === 'sent' ? 'text-green-600' : 'text-yellow-600'}">
+                ${msg.status}
+              </span>
+            </div>
+            <div class="mt-2">
+              <p class="text-sm text-gray-600">To: +${msg.to}</p>
+              <p class="mt-1 text-gray-700">${msg.message}</p>
+              ${msg.attachment ? `
+                <div class="mt-2">
+                  <a href="${msg.attachment}" target="_blank" class="text-blue-600 hover:underline text-sm">
+                    <i class="fas fa-paperclip mr-1"></i>
+                    View Attachment
+                  </a>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Error loading message history:', error);
+      }
+    }
+
+    // File drag and drop handling
+    const dropZone = document.querySelector('input[type="file"]').parentElement.parentElement.parentElement;
+    
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropZone.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(e) {
+      dropZone.classList.add('border-blue-500', 'bg-blue-50');
+    }
+
+    function unhighlight(e) {
+      dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+    }
+
+    dropZone.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      document.getElementById('attachment').files = files;
+    }
+
+    // Load message history when page loads
+    loadMessageHistory();
+  </script>
+</body>
+</html>
